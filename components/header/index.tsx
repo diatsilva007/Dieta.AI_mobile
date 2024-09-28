@@ -1,9 +1,29 @@
-import { View, StyleSheet, Pressable, Text } from "react-native";
+import { View, 
+    StyleSheet, 
+    Pressable, 
+    Text, 
+    SafeAreaView, 
+    Platform, 
+    StatusBar } 
+    from "react-native";
+
+import { Feather } from '@expo/vector-icons';
+import { colors } from '../../constants/colors';
 
 export function Header(){
     return(
-        <View>
-            <Text>HEADER AQUI!!</Text>
-        </View>
+        <SafeAreaView style={styles.container}>
+            <Text></Text>
+        </SafeAreaView>
     )
 }
+
+const styles = StyleSheet.create({  
+    container:{
+        backgroundColor: '#FFF',
+        borderBottomRightRadius: 14,
+        borderBottomLeftRadius: 14,
+        marginBottom: 14,
+        paddingTop: 70,
+    }
+})
