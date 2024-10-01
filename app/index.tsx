@@ -14,7 +14,7 @@ export default function Index() {
       </Text>
 
       <Text style={styles.text}>
-        Sua dieta personalizada com inteligência artificial 🤖  
+        Sua dieta personalizada com inteligência artifcial
       </Text>
 
       <Link href="/step" asChild>
