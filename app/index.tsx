@@ -17,11 +17,11 @@ export default function Index() {
         Sua dieta personalizada com inteligência artificial
       </Text>
 
-    <Link href="/step" asChild>
-      <Pressable style={styles.button} onPress={() => alert('Redirecting to About page')}>
-        <Text style={styles.buttonText}>Gerar dieta</Text>
-      </Pressable>
-    </Link>
+      <Link href="/step" asChild>
+        <Pressable style={styles.button} onPress={() => alert('Redirecting to About page')}>
+          <Text style={styles.buttonText}>Gerar dieta</Text>
+        </Pressable>
+      </Link>
     </View>
   )
 }
