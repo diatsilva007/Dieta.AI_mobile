@@ -12,6 +12,7 @@ import { Input } from '../../components/input';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { router } from 'expo-router';
 
 const schema = z.object({
     name: z.string().min(1, { message: "O nome é obrigatório" }),
@@ -29,6 +30,13 @@ export default function step() {
         resolver: zodResolver(schema),
 
     })
+
+    function handleCreate(data: FormData) {
+        console.log(data);
+
+
+        router.push("/create");
+    }
 
     return (
         <View style={styles.container}>
@@ -74,7 +82,7 @@ export default function step() {
                     keyboardType="numeric"
                 />
 
-                <Pressable style={styles.button}>
+                <Pressable style={styles.button} onPress={handleSubmit(handleCreate)}>
                     <Text style={styles.buttonText}>Avançar</Text>
                 </Pressable>
 
@@ -116,5 +124,5 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     }
-    
+
 })
