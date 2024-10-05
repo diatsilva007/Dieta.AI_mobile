@@ -9,10 +9,12 @@ import { colors } from '../../constants/colors';
 import { Header } from '../../components/header';
 import { Input } from '../../components/input';
 
-import { z } from 'zod';
+import { set, z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { router } from 'expo-router';
+import { useDataStore } from '@/store/data';
+import { State } from 'react-native-gesture-handler';
 
 const schema = z.object({
     name: z.string().min(1, { message: "O nome é obrigatório" }),
@@ -31,8 +33,17 @@ export default function step() {
 
     })
 
+    const setPageOne = useDataStore(State => State.setPageOne)
+
     function handleCreate(data: FormData) {
-        console.log(data);
+        console.log("PASSANDO DADOS DA PÁGINA 1");
+
+        setPageOne({
+            name: data.name,
+            weight: data.weight,
+            age: data.age,
+            height: data.height,
+        })
 
 
         router.push("/create");

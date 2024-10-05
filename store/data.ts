@@ -14,6 +14,7 @@ export type User = {
 type DataState = {
     user: User;
     setPageOne: (data: Omit<User, "gender" | "objective" | "level">) => void;
+    setPageTwo: (data: Pick<User, "gender" | "objective" | "level">) => void;   
 }
 
 export const useDataStore = create<DataState>((set) => ({
@@ -27,5 +28,6 @@ export const useDataStore = create<DataState>((set) => ({
         gender: ""
     },
 
-    setPageOne: (data) => set((state) => ({ user: { ...state.user, ...data } }))
+    setPageOne: (data) => set((state) => ({ user: { ...state.user, ...data } })),
+    setPageTwo: (data) => set((state) => ({ user: { ...state.user, ...data } })),
 })) 

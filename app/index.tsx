@@ -18,7 +18,7 @@ export default function Index() {
       </Text>
 
       <Link href="/step" asChild>
-        <Pressable style={styles.button} onPress={() => alert('Redirecting to About page')}>
+        <Pressable style={styles.button}>
           <Text style={styles.buttonText}>Gerar dieta</Text>
         </Pressable>
       </Link>
