@@ -1,12 +1,13 @@
-import { View, Text, StyleSheet, Pressable, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ScrollView, Share } from 'react-native';
 
 import { useDataStore } from '@/store/data';
 import { api } from '@/services/api';
 import { useQuery } from '@tanstack/react-query';
 import { colors } from '@/constants/colors';
 import { Data } from '@/types/data';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { coolDownAsync } from 'expo-web-browser';
+import { Ionicons, Feather } from '@expo/vector-icons';
 
 interface ResponseData {
   data: Data;
@@ -24,8 +25,7 @@ export default function nutrition() {
           throw new Error('Filed load nutrition');
         }
 
-        const response = await api.get<ResponseData>("/teste")
-        /*const response = await api.post("/create", {
+        const response = await api.post<ResponseData>("/create", {
           name: user.name,
           age: user.age,
           gender: user.gender,
@@ -33,7 +33,7 @@ export default function nutrition() {
           weight: user.weight,
           objective: user.objective,
           level: user.level
-        })*/
+        })
 
         return response.data.data;
 
@@ -42,6 +42,27 @@ export default function nutrition() {
       };
     }
   });
+
+  async function handleShare() {
+    try {
+      if (data && Object.keys(data).length === 0) return;
+
+      const supplements = `${data?.suplementos.map(item => ` ${item}`)}`
+
+      const foods = `${data?.refeicoes.map(item => `- Nome: ${item.nome}\n- Horário: ${item.horario}\n- Alimentos: ${item.
+        alimentos.map( alimento => ` ${alimento}` )}`)}` 
+
+        const message = `Dieta: ${data?.nome} - Objetivo: ${data?.objetivo}\n\n${foods}\n\n- Dica suplemento: ${supplements}`
+
+        await Share.share({
+          message: message
+        })
+
+    } catch (err) {
+      console.log(err);
+    }
+
+  }
 
   if (isFetching) {
     return (
@@ -70,23 +91,62 @@ export default function nutrition() {
         <View style={styles.contentHeader}>
           <Text style={styles.title}>Minha dieta</Text>
 
-          <Pressable style={styles.buttonShare}>
+          <Pressable style={styles.buttonShare} onPress={handleShare}>
             <Text style={styles.buttonShareText}>Compartilhar</Text>
           </Pressable>
+
         </View>
 
       </View>
 
-      <ScrollView style={{ paddingLeft: 16, paddingRight: 16 }}>
+      <View style={{ paddingLeft: 16, paddingRight: 16, flex: 1 }}>
         {data && Object.keys(data).length > 0 && (
           <>
             <Text style={styles.name}>Nome: {data.nome}</Text>
             <Text style={styles.objective}>Foco: {data.objetivo}</Text>
 
             <Text style={styles.lable}>Refeições:</Text>
+
+            <ScrollView>
+              <View style={styles.foods}>
+                {data.refeicoes.map((refeicao) => (
+                  <View key={refeicao.nome} style={styles.food}>
+                    <View style={styles.foodHeader}>
+                      <Text style={styles.foodName}>{refeicao.nome}</Text>
+                      <Ionicons name='restaurant' size={16} color="#000" />
+                    </View>
+
+                    <View style={styles.foodContent}>
+                      <Feather name='clock' size={14} color="#000" />
+                      <Text>Horário: {refeicao.horario}</Text>
+                    </View>
+
+                    <Text style={styles.foodText}>Alimentos:</Text>
+                    {refeicao.alimentos.map(alimento => (
+                      <Text key={alimento}>{alimento}</Text>
+                    ))}
+
+                  </View>
+                ))}
+              </View>
+
+              <View style={styles.supplements}>
+                <Text style={styles.foodName}>Dica suplementos:</Text>
+                {data.suplementos.map(item => (
+                  <Text key={item}>{item}</Text>
+                ))}
+              </View>
+
+              <Pressable style={styles.button} onPress={() => router.replace("/")}>
+                <Text style={styles.buttonText}>
+                  Gerar nova dieta
+                </Text>
+              </Pressable>
+
+            </ScrollView>
           </>
         )}
-      </ScrollView>
+      </View>
 
     </View>
   );
@@ -97,6 +157,8 @@ const styles = StyleSheet.create({
   loading: {
     flex: 1,
     backgroundColor: colors.background,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   loadingText: {
@@ -165,6 +227,66 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 16,
     fontWeight: 'bold',
+  },
+
+  foods: {
+    backgroundColor: colors.white,
+    padding: 14,
+    borderRadius: 8,
+    marginTop: 8,
+    gap: 8,
+  },
+
+  food: {
+    backgroundColor: 'rgba(208, 208, 208, 0.40)',
+    padding: 8,
+    borderRadius: 4,
+  },
+
+  foodHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+
+  foodName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+
+  foodContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+
+  foodText: {
+    fontSize: 16,
+    marginTop: 4,
+    marginBottom: 4,
+  },
+
+  supplements: {
+    backgroundColor: colors.white,
+    marginTop: 14,
+    marginBottom: 14,
+    padding: 14,
+    borderRadius: 8,
+  },
+
+  button: {
+    backgroundColor: colors.blue,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+    marginBottom: 24,
+  },
+
+  buttonText: {
+    color: colors.white,
+    fontWeight: 'bold',
+    fontSize: 16,
   }
 
 });

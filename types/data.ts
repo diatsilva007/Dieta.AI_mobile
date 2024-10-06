@@ -11,6 +11,7 @@ export interface Data {
     altura: number,
     peso: number,
     objetivo: number,
-    refeicoes: RefeicoesProps[];
+    refeicoes: RefeicoesProps[],
+    suplementos: string[];
 }
 
